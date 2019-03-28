@@ -36,13 +36,32 @@ class TimersDashboard extends React.Component {
     });
   }
 
+  handleUpdateFormSubmit = (timerToUpdate) => {
+    this.updateTimer(timerToUpdate);
+  }
+
+  updateTimer = (timerToUpdate) => {
+    this.setState({
+      timers: this.state.timers.map((timer) => {
+        if (timer.id === timerToUpdate.id) {
+          return Object.assign({}, timer, {
+            title: timerToUpdate.title,
+            project: timerToUpdate.project
+          });
+        } else {
+          return timer;
+        }
+      })
+    });
+  }
+
   render() {
     return (
       <div className='ui three column centered grid'>
         <div className='column'>
           <EditableTimerList
             timers={this.state.timers}
-            formSubmit={this.handleFormSubmit}
+            formSubmit={this.handleUpdateFormSubmit}
           />
           <ToggleableTimerForm
             isOpen={false}
@@ -131,6 +150,11 @@ class EditableTimer extends React.Component {
     this.state.editFormOpen ? this.setState({ editFormOpen: false }) : this.setState({ editFormOpen: true });
   }
 
+  handleFormSubmit = (timer) => {
+    this.props.formSubmit(timer);
+    this.handleFormOpen();
+  }
+
   render() {
     if (!this.state.editFormOpen) {
       return (
@@ -153,7 +177,7 @@ class EditableTimer extends React.Component {
             title={this.props.title}
             project={this.props.project}
             formOpen={this.handleFormOpen}
-            formSubmit={this.props.formSubmit}
+            formSubmit={this.handleFormSubmit}
           />
         </div>
       );
@@ -227,7 +251,7 @@ class TimerForm extends React.Component {
   }
 
   render() {
-    const submitText = this.props.title ? 'Update' : 'Create'
+    const submitText = this.props.id ? 'Update' : 'Create'
     return (
       <div className='ui centered card' style={bottomMargin}>
         <div className='content'>
