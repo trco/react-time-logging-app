@@ -1,3 +1,5 @@
+import uuid from 'uuid';
+
 window.helpers = (function () {
   function newTimer(attrs = {}) {
     const timer = {
