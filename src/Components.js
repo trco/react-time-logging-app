@@ -2,6 +2,7 @@ import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import uuid from 'uuid';
 
+import './client.js'
 import './helpers.js'
 
 class TimersDashboard extends React.Component {
@@ -25,8 +26,22 @@ class TimersDashboard extends React.Component {
     ],
   }
 
+  componentDidMount() {
+    this.loadTimersFromServer();
+    // update timers every 5s
+    setInterval(this.loadTimersFromServer, 5000)
+  }
+
+  loadTimersFromServer = () => {
+    window.client.getTimers((timers) => {
+      this.setState({ timers: timers });
+    });
+  }
+
   handleCreateFormSubmit = (timer) => {
     this.createTimer(timer);
+    // send data to server
+    window.client.updateTimer(timer);
   }
 
   createTimer = (timer) => {
@@ -38,6 +53,8 @@ class TimersDashboard extends React.Component {
 
   handleUpdateFormSubmit = (timerToUpdate) => {
     this.updateTimer(timerToUpdate);
+    // send data to server
+    window.client.updateTimer(timerToUpdate);
   }
 
   updateTimer = (timerToUpdate) => {
@@ -57,6 +74,8 @@ class TimersDashboard extends React.Component {
 
   handleDeleteTimer = (timerId) => {
     this.deleteTimer(timerId);
+    // send data to server
+    window.client.deleteTimer({ id: timerId });
   }
 
   deleteTimer = (timerId) => {
@@ -71,6 +90,9 @@ class TimersDashboard extends React.Component {
 
   startTimer = (timerId) => {
     const now = Date.now();
+
+    // send data to server
+    window.client.startTimer({ id: timerId, start: now });
 
     this.setState({
       timers: this.state.timers.map((timer) => {
@@ -91,6 +113,9 @@ class TimersDashboard extends React.Component {
 
   stopTimer = (timerId) => {
     const now = Date.now();
+
+    // send data to server
+    window.client.stopTimer({ id: timerId, stop: now });
 
     this.setState({
       timers: this.state.timers.map((timer) => {
