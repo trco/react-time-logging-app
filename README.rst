@@ -9,4 +9,4 @@ To see ``react-time-logging-app`` in action clone the repository and run it loca
     $ git clone https://github.com/trco/react-logging-app.git
     $ cd react-logging-app
     $ npm install
-    $ npm start
+    $ npm run dev
